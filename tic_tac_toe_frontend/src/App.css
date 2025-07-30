@@ -1,104 +1,109 @@
-/* CSS Variables for Theme Management */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --ttt-primary: #1976d2;
+  --ttt-secondary: #424242;
+  --ttt-accent: #ffd600;
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+body {
+  background: #f7f9fc !important;
 }
 
-.App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+/* Root flex for centered layout */
+.app-tictactoe-root {
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+  min-width: 100vw;
+  background: #f7f9fc;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+/* Styles for board and cells */
+.tictactoe-board {
+  margin: 12px 0 12px 0;
+}
+.cell-btn {
+  font-family: inherit;
+  font-size: 32px;
+  font-weight: 700;
+  background: #fafafc;
+  color: #bfc3d5;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  height: 93px;
+  width: 93px;
+  cursor: pointer;
+  transition: background 0.17s, color 0.16s;
+  box-shadow: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell-btn:active {
+  filter: brightness(0.95);
 }
 
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
+.cell-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* Scoreboard and status */
+.scoreboard {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  gap: 5px;
+}
+
+.status-display {
+  margin-top: 0;
+  min-height: 25px;
+  margin-bottom: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .012em;
+}
+
+/* Restart button override for consistency */
+.restart-btn {
+  background-color: var(--ttt-primary) !important;
+  color: #fff !important;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
-}
-
-.theme-toggle:active {
-  transform: translateY(0);
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Responsive adjustments */
+@media (max-width: 520px) {
+  .tictactoe-board {
+    width: 96vw !important;
+    height: 96vw !important;
+    min-width: 225px;
+    min-height: 225px;
+    max-width: unset;
+    max-height: unset;
   }
-  to {
-    transform: rotate(360deg);
+  .cell-btn {
+    width: 29vw !important;
+    height: 29vw !important;
+    font-size: 7vw !important;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 0;
+  }
+  .scoreboard {
+    flex-direction: column;
+    gap: 7px;
+    align-items: center;
   }
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+@media (max-width: 340px) {
+  .tictactoe-board {
+    width: 97vw !important;
+    height: 97vw !important;
   }
 }
