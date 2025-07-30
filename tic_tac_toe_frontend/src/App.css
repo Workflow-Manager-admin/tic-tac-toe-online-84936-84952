@@ -23,6 +23,139 @@ body {
 .tictactoe-board {
   margin: 12px 0 12px 0;
 }
+
+/* Controls Section Modern Layout */
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 22px;
+  margin-top: 8px;
+  gap: 0;
+}
+
+.ttt-heading {
+  margin: 0 0 19px 0;
+  color: var(--ttt-primary);
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.03em;
+  user-select: none;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.controls-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding-bottom: 8px;
+  width: 100%;
+  min-height: 38px;
+}
+
+.controls-mode {
+  padding-top: 6px;
+}
+
+.controls-difficulty {
+  padding-top: 2px;
+}
+
+.controls-restart {
+  justify-content: flex-end;
+  padding-bottom: 0;
+  margin-top: 7px;
+  margin-bottom: 0;
+}
+
+/* Label styling */
+.ttt-label {
+  font-weight: 600;
+  color: #222;
+  font-size: 16px;
+  letter-spacing: .02em;
+  min-width: 73px;
+  text-align: left;
+}
+
+/* Dropdown/select styling */
+.ttt-select {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 4px 14px 4px 10px;
+  border: 2px solid var(--ttt-primary);
+  border-radius: 6px;
+  background: #f9faff;
+  color: var(--ttt-primary);
+  outline: none;
+  height: 36px;
+  transition: border .15s;
+}
+.ttt-select-secondary {
+  border-color: var(--ttt-secondary);
+  color: var(--ttt-secondary);
+}
+
+/* Restart Button Modern Look */
+.restart-btn {
+  background-color: var(--ttt-primary) !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 20px !important;
+  padding: 0 18px 0 14px !important;
+  min-width: 110px;
+  height: 37px;
+  font-weight: bold;
+  font-size: 16px !important;
+  cursor: pointer;
+  box-shadow: 0 2.5px 12px -4px #1976d233;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: center;
+  letter-spacing: 0.025em;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+.restart-btn:hover, .restart-btn:focus {
+  background-color: #145ba0 !important;
+}
+
+.restart-icon {
+  display: inline-block;
+  font-size: 18px;
+  margin-right: 5px;
+  margin-left: -1px;
+  vertical-align: text-bottom;
+}
+
+/* Responsive controls column for small screens */
+@media (max-width: 510px) {
+  .controls-section {
+    gap: 0;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    min-height: 20px;
+    padding-bottom: 10px;
+  }
+  .controls-restart {
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-top: 2px;
+    margin-bottom: 0;
+  }
+}
+
+/* (EXISTING) ... existing styles after this unchanged ... */
 .cell-btn {
   font-family: inherit;
   font-size: 32px;

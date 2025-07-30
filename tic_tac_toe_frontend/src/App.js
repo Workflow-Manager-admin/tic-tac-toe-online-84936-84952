@@ -359,40 +359,14 @@ function App() {
         }}
       >
         {/* Controls */}
-        <div style={{
-          width: "100%",
-          marginBottom: 18,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 10,
-        }}>
-          <h1
-            style={{
-              margin: "7px 0 0 0",
-              color: COLORS.primary,
-              fontSize: 30,
-              fontWeight: 800,
-              textAlign: "center",
-              letterSpacing: "0.03em",
-              userSelect: "none",
-            }}
-          >
+        <div className="controls-section">
+          <h1 className="ttt-heading">
             Tic Tac Toe
           </h1>
-          <div
-            style={{
-              margin: "0 0 10px 0",
-              display: "flex",
-              flexDirection: "row",
-              gap: 8,
-              alignItems: "center",
-              width: "100%",
-              justifyContent: "center",
-            }}
-          >
-            {/* Mode toggle */}
-            <label htmlFor="game-mode" style={{ fontWeight: 600, color: COLORS.secondary, fontSize: 15, letterSpacing: ".03em" }}>
+
+          {/* Section: Game Mode */}
+          <div className="controls-row controls-mode">
+            <label htmlFor="game-mode" className="ttt-label">
               Mode:
             </label>
             <select
@@ -400,68 +374,41 @@ function App() {
               value={mode}
               aria-label="Game mode selection"
               onChange={handleModeChange}
-              style={{
-                fontWeight: 600,
-                fontSize: 15,
-                padding: "3px 10px",
-                border: `2.2px solid ${COLORS.primary}`,
-                borderRadius: 8,
-                background: "#f9faff",
-                color: COLORS.primary,
-                outline: "none",
-              }}
+              className="ttt-select"
             >
               <option value="PvP">{MODES.PvP}</option>
               <option value="PvC">{MODES.PvC}</option>
             </select>
-            {/* Difficulty level selector (only visible in PvC mode) */}
-            {mode === "PvC" && (
-              <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 10 }}>
-                <label htmlFor="ai-difficulty" style={{ fontWeight: 600, color: COLORS.secondary, fontSize: 15, letterSpacing: ".03em" }}>
-                  Difficulty:
-                </label>
-                <select
-                  id="ai-difficulty"
-                  value={difficulty}
-                  aria-label="Computer difficulty selection"
-                  onChange={handleDifficultyChange}
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 15,
-                    padding: "3px 10px",
-                    border: `2px solid ${COLORS.secondary}`,
-                    borderRadius: 8,
-                    background: "#f9faff",
-                    color: COLORS.secondary,
-                    outline: "none",
-                  }}
-                >
-                  <option value="Easy">{DIFFICULTIES.Easy}</option>
-                  <option value="Medium">{DIFFICULTIES.Medium}</option>
-                  <option value="Hard">{DIFFICULTIES.Hard}</option>
-                </select>
-              </div>
-            )}
+          </div>
+
+          {/* Section: Difficulty */}
+          {mode === "PvC" && (
+            <div className="controls-row controls-difficulty">
+              <label htmlFor="ai-difficulty" className="ttt-label">
+                Difficulty:
+              </label>
+              <select
+                id="ai-difficulty"
+                value={difficulty}
+                aria-label="Computer difficulty selection"
+                onChange={handleDifficultyChange}
+                className="ttt-select ttt-select-secondary"
+              >
+                <option value="Easy">{DIFFICULTIES.Easy}</option>
+                <option value="Medium">{DIFFICULTIES.Medium}</option>
+                <option value="Hard">{DIFFICULTIES.Hard}</option>
+              </select>
+            </div>
+          )}
+
+          {/* Section: Restart Button */}
+          <div className="controls-row controls-restart">
             <button
               className="restart-btn"
-              style={{
-                marginLeft: "auto",
-                background: COLORS.primary,
-                color: "#fff",
-                border: "none",
-                borderRadius: 8,
-                padding: "4px 14px",
-                fontWeight: "bold",
-                fontSize: 16,
-                cursor: "pointer",
-                transition: "background-color 0.2s, box-shadow 0.2s",
-                boxShadow: `0 2.5px 12px -4px ${COLORS.primary}33`,
-                letterSpacing: "0.03em",
-              }}
               onClick={handleRestart}
               aria-label="Restart game"
             >
-              &#x21bb; Restart
+              <span className="restart-icon" role="img" aria-label="Refresh">&#x21bb;</span> Restart
             </button>
           </div>
         </div>
