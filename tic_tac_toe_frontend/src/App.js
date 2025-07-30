@@ -22,6 +22,12 @@ const MODES = {
   PvC: "Player vs Computer",
 };
 
+const DIFFICULTIES = {
+  Easy: "Easy",
+  Medium: "Medium",
+  Hard: "Hard",
+};
+
 /**
  * Determines if there is a winner on the board.
  * Returns { winner: "X" | "O" | null, winningSquares: [[row, col], ...] }
@@ -119,13 +125,108 @@ function getRandomEmptyCell(grid) {
 }
 
 /**
- * Main App component for Tic Tac Toe.
+ * Returns all empty cells as [row, col] pairs.
+ */
+function getAllEmptyCells(grid) {
+  const empties = [];
+  for (let r = 0; r < grid.length; ++r) {
+    for (let c = 0; c < grid[r].length; ++c) {
+      if (!grid[r][c]) empties.push([r, c]);
+    }
+  }
+  return empties;
+}
+
+/**
+ * Try to find a winning move for the specified marker ("O" or "X").
+ * Returns [row, col] if found, else null.
+ */
+function findWinningMove(grid, marker) {
+  // For each empty cell, if putting 'marker' there wins, return it.
+  const emptyCells = getAllEmptyCells(grid);
+  for (let [row, col] of emptyCells) {
+    const temp = grid.map(row => row.slice());
+    temp[row][col] = marker;
+    const { winner } = calculateWinner(temp);
+    if (winner === marker) return [row, col];
+  }
+  return null;
+}
+
+/**
+ * Minimax algorithm for Tic Tac Toe AI (returns {score, move})
+ *
+ * - board: 3x3 array
+ * - depth: integer
+ * - isMaximizing: boolean (true for "O"/AI, false for "X"/player)
+ * - aiMarker: "O" (computer)
+ * - humanMarker: "X" (player)
+ */
+function minimax(board, depth, isMaximizing, aiMarker, humanMarker) {
+  const { winner } = calculateWinner(board);
+  if (winner === aiMarker) return { score: 10 - depth };
+  if (winner === humanMarker) return { score: depth - 10 };
+  if (isDraw(board)) return { score: 0 };
+
+  let bestMove = null;
+  let bestScore = isMaximizing ? -Infinity : Infinity;
+  let empties = getAllEmptyCells(board);
+  for (let [row, col] of empties) {
+    const temp = board.map(r => r.slice());
+    temp[row][col] = isMaximizing ? aiMarker : humanMarker;
+    const { score } = minimax(temp, depth + 1, !isMaximizing, aiMarker, humanMarker);
+    if (isMaximizing) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = [row, col];
+      }
+    } else {
+      if (score < bestScore) {
+        bestScore = score;
+        bestMove = [row, col];
+      }
+    }
+  }
+  return { score: bestScore, move: bestMove };
+}
+
+/**
+ * Computer Move Logic: Easy (random), Medium (block/win), Hard (minimax optimal)
+ *
+ * PUBLIC_INTERFACE
+ */
+function getComputerMove(grid, difficulty) {
+  if (difficulty === "Easy") {
+    return getRandomEmptyCell(grid);
+  }
+  if (difficulty === "Medium") {
+    // 1. Can win? win.
+    let winMove = findWinningMove(grid, "O");
+    if (winMove) return winMove;
+    // 2. Can block player? block.
+    let blockMove = findWinningMove(grid, "X");
+    if (blockMove) return blockMove;
+    // 3. Else random.
+    return getRandomEmptyCell(grid);
+  }
+  if (difficulty === "Hard") {
+    // minimax
+    const { move } = minimax(grid, 0, true, "O", "X");
+    if (move) return move;
+    else return getRandomEmptyCell(grid); // fallback
+  }
+  return getRandomEmptyCell(grid);
+}
+
+/**
+ * Main App component for Tic Tac Toe with difficulty selection.
  *
  * PUBLIC_INTERFACE
  */
 function App() {
   const [theme] = useState("light"); // Fixed light theme as per requirements.
   const [mode, setMode] = useState("PvP");
+  const [difficulty, setDifficulty] = useState("Easy");
   const [grid, setGrid] = useState(getEmptyGrid());
   const [activeX, setActiveX] = useState(true); // X always goes first
   const [gameOver, setGameOver] = useState(false);
@@ -167,16 +268,15 @@ function App() {
     }
   }, [grid, mode, activeX]);
 
-  // Computer move (basic random AI)
+  // Computer move, according to selected difficulty
   useEffect(() => {
     if (
       mode === "PvC" &&
       !gameOver &&
       !activeX // Computer is always O
     ) {
-      // Delay for effect
       const timer = setTimeout(() => {
-        const move = getRandomEmptyCell(grid);
+        const move = getComputerMove(grid, difficulty);
         if (move) {
           const [row, col] = move;
           handleCellClick(row, col, true);
@@ -185,7 +285,7 @@ function App() {
       return () => clearTimeout(timer);
     }
     // eslint-disable-next-line
-  }, [activeX, grid, gameOver, mode]);
+  }, [activeX, grid, gameOver, mode, difficulty]);
 
   /**
    * Handles cell click for play; if computer turn, force isComputer=true.
@@ -214,11 +314,19 @@ function App() {
   };
 
   /**
-   * Handles changes in game mode, resetting game.
+   * Handles changes in game mode, resetting game & scores.
    */
   const handleModeChange = e => {
     setMode(e.target.value);
     setScore({ X: 0, O: 0, Draws: 0 });
+    handleRestart();
+  };
+
+  /**
+   * Handles difficulty change and resets board, but does not reset score (like mode change does).
+   */
+  const handleDifficultyChange = e => {
+    setDifficulty(e.target.value);
     handleRestart();
   };
 
@@ -306,6 +414,34 @@ function App() {
               <option value="PvP">{MODES.PvP}</option>
               <option value="PvC">{MODES.PvC}</option>
             </select>
+            {/* Difficulty level selector (only visible in PvC mode) */}
+            {mode === "PvC" && (
+              <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 10 }}>
+                <label htmlFor="ai-difficulty" style={{ fontWeight: 600, color: COLORS.secondary, fontSize: 15, letterSpacing: ".03em" }}>
+                  Difficulty:
+                </label>
+                <select
+                  id="ai-difficulty"
+                  value={difficulty}
+                  aria-label="Computer difficulty selection"
+                  onChange={handleDifficultyChange}
+                  style={{
+                    fontWeight: 600,
+                    fontSize: 15,
+                    padding: "3px 10px",
+                    border: `2px solid ${COLORS.secondary}`,
+                    borderRadius: 8,
+                    background: "#f9faff",
+                    color: COLORS.secondary,
+                    outline: "none",
+                  }}
+                >
+                  <option value="Easy">{DIFFICULTIES.Easy}</option>
+                  <option value="Medium">{DIFFICULTIES.Medium}</option>
+                  <option value="Hard">{DIFFICULTIES.Hard}</option>
+                </select>
+              </div>
+            )}
             <button
               className="restart-btn"
               style={{
